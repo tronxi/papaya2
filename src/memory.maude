@@ -1,0 +1,36 @@
+fmod MEMORY is
+    pr LANGUAGE-TYPE .
+    pr QID .
+
+    sorts Pair Memory .
+    subsort Pair < Memory .
+
+    ops notFound reserved : -> LanguageType [ctor] .
+    op [_,_] : Qid LanguageType -> Pair [ctor] .
+
+    op none : -> Memory [ctor] .
+    op __ : Memory Memory -> Memory [ctor assoc comm id: none] .
+
+    var Q : Qid .
+    vars M M' : Memory .
+    vars T T' : LanguageType .
+
+    op findInMemory : Memory Qid -> LanguageType .
+    eq findInMemory (M [Q, T] M', Q) = T .
+    eq findInMemory (M, Q) = notFound [owise] .
+
+    op saveInMemory : Memory Qid LanguageType -> Memory .
+    eq saveInMemory (M [Q, T'], Q, T) = M [Q, T] .
+    eq saveInMemory (M, Q, T) = M [Q, T] [owise] .
+
+    op reserveInMemory : Memory Qid -> Memory .
+    eq reserveInMemory(M, Q) = 
+        if findInMemory(M, Q) =/= notFound
+        then
+            M
+        else
+            saveInMemory(M, Q, reserved)
+        fi .
+
+
+endfm

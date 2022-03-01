@@ -1,0 +1,46 @@
+fmod LANGUAGE-TYPE-SIGN is
+    pr QID .
+    sorts LanguageTypes LanguageType .
+    subsort Qid < LanguageType .
+endfm
+
+view LanguageType from TRIV to LANGUAGE-TYPE-SIGN is
+    sort Elt to LanguageType .
+endv
+
+fmod LANGUAGE-TYPE is
+    pr INT .
+    pr STRING .
+    pr FLOAT .
+    pr LANGUAGE-TYPE-SIGN .
+    pr (GENERIC-LIST * (op _,_  to _/_)){LanguageType} .
+
+    var I : Int .
+    var S : String .
+    var B : Bool .
+    var F : Float .
+    var L : GenericList{LanguageType} .
+
+    ops intType stringType boolType floatType listType : -> LanguageTypes [ctor] .
+    op (__) : LanguageTypes Int -> LanguageType [ctor] .
+    op (__) : LanguageTypes String -> LanguageType [ctor] .
+    op (__) : LanguageTypes Bool -> LanguageType [ctor] .
+    op (__) : LanguageTypes Float -> LanguageType [ctor] .
+    op (__) : LanguageTypes GenericList{LanguageType} -> LanguageType [ctor] .
+
+    op int : Int -> LanguageType .
+    eq int(I) = (intType I) .
+
+    op string : String -> LanguageType .
+    eq string(S) = (stringType S) .
+
+    op bool : Bool -> LanguageType .
+    eq bool(B) = (boolType B) .
+
+    op float : Float -> LanguageType .
+    eq float(F) = (floatType F) .
+
+    op list : GenericList{LanguageType} -> LanguageType .
+    eq list(L) = (listType L) .
+
+endfm

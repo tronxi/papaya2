@@ -1,0 +1,47 @@
+fmod MEMORY-STACK is
+    pr MEMORY .
+
+    sort MemoryStack .
+    subsort Memory < MemoryStack .
+
+    op emptyStack : -> MemoryStack [ctor] .
+    op _:_ : MemoryStack MemoryStack -> MemoryStack [ctor assoc id: emptyStack] .
+
+    var M : Memory .
+    vars MS MS' : MemoryStack .
+    var Q : Qid .
+    var T : LanguageType . 
+
+    op push : MemoryStack Memory -> MemoryStack .
+    eq push(emptyStack, M) = M .
+    eq push(MS, M) = M : MS .
+
+    op pop : MemoryStack ~> MemoryStack .
+    eq pop(M : MS) = MS .
+
+    op top : MemoryStack ~> MemoryStack .
+    eq top(M : MS) = M .
+
+    op find : MemoryStack Qid -> LanguageType .
+    eq find(emptyStack, Q) = notFound .
+    eq find(M : MS, Q) = 
+        if findInMemory(M, Q) =/= notFound
+        then
+            findInMemory(M, Q)
+        else
+            find(MS, Q)
+        fi .
+
+    op reserve : MemoryStack Qid -> MemoryStack .
+    eq reserve(M : MS, Q) = reserveInMemory(M, Q) : MS .
+
+    op save : MemoryStack Qid LanguageType -> MemoryStack .
+    eq save(emptyStack, Q, T) = emptyStack .
+    eq save(M : MS, Q, T) = 
+        if findInMemory(M, Q) =/= notFound
+        then
+            saveInMemory(M, Q, T) : MS 
+        else 
+            M : save(MS, Q, T)
+        fi .
+endfm

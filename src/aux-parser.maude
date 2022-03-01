@@ -1,0 +1,37 @@
+fmod AUX-PARSER is
+    pr META-LEVEL .
+    pr INT .
+    pr CONVERSION .
+    pr MEMORY-STACK .
+
+    vars T T' T'' : Term .
+    var S : String .
+    var MS : MemoryStack .
+
+    op termToQid : Term -> Qid .
+    eq termToQid(T) = downTerm(T, 'error) .
+
+    op termToInt : Term -> Int .
+    eq termToInt(T) = rat(string(termToQid(T)), 10) .
+
+    op termToString : Term -> String .
+    eq termToString(T) = string(termToQid(T)) .
+
+    op termToFloat : Term -> Float .
+    eq termToFloat(T) = float(string(termToQid(T))) .
+
+    op typeTokenToType : MemoryStack Term -> LanguageType .
+    eq typeTokenToType(MS, 'int`(_`)['token[T]]) = int(termToInt(T)) .
+    eq typeTokenToType(MS, 'string`(_`)['token[T]]) = string(termToString(T)) .
+    eq typeTokenToType(MS, 'float`(_`)['token[T]]) = float(termToFloat(T)) .
+    eq typeTokenToType(MS, 'list`(_`)[T]) = list(termListToTypeList(MS, T)) .
+    eq typeTokenToType(MS, 'token[T]) = find(MS, termToQid(T)) [owise] .
+
+    op termListToTypeList : MemoryStack Term -> LanguageType .
+    eq termListToTypeList(MS, emptyList) = emptyList .
+    eq termListToTypeList(MS, '_`,_[T, '_`,_[T',T'']]) = typeTokenToType(MS, T) / termListToTypeList(MS, T') / termListToTypeList(MS, T'') .
+    eq termListToTypeList(MS, '_`,_[T,T']) = typeTokenToType(MS, T) / typeTokenToType(MS, T') .
+    eq termListToTypeList(MS, T) = typeTokenToType(MS, T) [owise] .
+    --- eq termListToTypeList(MS, T) = int(10) / int(29) / int(15) .
+
+endfm

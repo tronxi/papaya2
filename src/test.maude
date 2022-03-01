@@ -1,0 +1,34 @@
+load loads 
+mod TEST is
+    pr SEMANTICS .
+
+    op mem1 : -> Memory .
+    eq mem1 = saveInMemory(none, 'a, int(1)) .
+    
+    op memA : -> Memory .
+    eq memA = saveInMemory(mem1, 'b, int(1)) .
+
+    op mem2 : -> Memory .
+    eq mem2 = saveInMemory(none, 'c, int(2)) .
+    
+    op memB : -> Memory .
+    eq memB = saveInMemory(mem2, 'd, int(2)) .
+
+    op stack : -> MemoryStack .
+    eq stack = push(push(emptyStack, reserveInMemory(memA, 'var)), memB) .
+
+    op initialProgram : -> Term .
+    eq initialProgram = generate("declare: var ;  var = list(float(10.83) , int(20), list(int(10), int(20), int(30)), int(30)) ; ") .
+endm
+set print attribute on .
+--- red find(memA, 'e) .
+--- red top(memB) .
+--- red reserve(stack, 'b) .
+--- red stack .
+--- red save(reserve(stack, 'vaar), 'var, int(23)) .
+--- red bubble .
+--- red save(stack, 'var, int(23)) .
+red initialProgram .
+--- red termToQid(''a.Qid) .
+frew < program : Program | input:  initialProgram, memory: none > .
+q

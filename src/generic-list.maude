@@ -1,0 +1,9 @@
+fmod GENERIC-LIST {X :: TRIV} is
+    sort GenericList{X} .
+    subsort X$Elt < GenericList{X} .
+
+    op emptyList : -> GenericList{X} [ctor] .
+    op _,_ : GenericList{X} GenericList{X} -> GenericList{X} [ctor assoc id: emptyList] .
+
+
+endfm

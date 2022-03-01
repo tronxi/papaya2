@@ -1,0 +1,25 @@
+fmod SIGN is
+    sorts @Token@ @Command@ @Program@ @Type@ .
+    subsort @Command@ < @Program@ .
+    subsort @Token@ < @Type@ .
+endfm
+
+view Token from TRIV to SIGN is
+    sort Elt to @Token@ .
+endv
+
+fmod COMMAND-SIGN is
+    pr SIGN .
+    pr GENERIC-LIST{Token} .
+
+    op string(_) : @Token@ -> @Type@ .
+    op int(_) : @Token@ -> @Type@ .
+    op float(_) : @Token@ -> @Type@ .
+    op list(_) : GenericList{Token} -> @Token@ .
+
+    op declare:_; : @Token@ -> @Command@ [ctor prec 40] .
+    op _=_; : @Token@ @Type@ -> @Command@ [ctor prec 39] .
+
+    op empty : -> @Command@ [ctor] .
+    op __ : @Program@ @Program@ -> @Program@ [ctor assoc id: empty] .
+endfm

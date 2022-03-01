@@ -1,0 +1,13 @@
+fmod ASSIGNMENT is
+    pr META-LEVEL .
+    pr MEMORY-STACK .
+    pr AUX-PARSER .
+
+    var MS : MemoryStack .
+    var Q : Qid .
+    var T : Term .
+
+    op assign : MemoryStack Qid Term -> MemoryStack .
+    eq assign(MS, Q, T) = save(MS, Q, typeTokenToType(MS, T)) .
+
+endfm

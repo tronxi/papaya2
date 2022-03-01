@@ -1,0 +1,9 @@
+fmod BUBBLE is 
+    inc QID-LIST .
+    pr COMMAND-SIGN .
+
+    op token : Qid -> @Token@
+    [special (id-hook Bubble   (1 1)
+           op-hook qidSymbol (<Qids> : ~> Qid))] .
+
+endfm

@@ -1,0 +1,10 @@
+declare: var ; 
+declare: var2 ;
+declare: var3 ;
+declare: var4 ;
+declare: varList ;
+var = int(10) ;
+var2 = string(hola);
+var3 = float(3.14);
+var4 = var ;
+varList = list(string(a), string(b), var, list(var2)) ;
