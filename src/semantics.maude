@@ -3,7 +3,6 @@ mod SEMANTICS is
     pr LEXICAL .
     inc STD-STREAM .
     pr COMMAND-SIGN .
-    pr AUX-PARSER .
     pr MEMORY-STACK .
     pr ASSIGNMENT .
 
@@ -18,7 +17,7 @@ mod SEMANTICS is
     op input:_ : TermList -> Attribute [ctor] .
     op memory:_ : MemoryStack -> Attribute [ctor] .
 
-    vars T T2 T' T'' : TermList .
+    vars T T' T'' : TermList .
     vars MS MS' : MemoryStack .
     var Ats : AttributeSet .
     var S : String .
@@ -30,11 +29,17 @@ mod SEMANTICS is
         < program : Program | input: ('__['declare:_;['token[T]], T']), memory: MS , Ats >
         =>
         < program : Program | input: T', memory: MS' , Ats > 
-    if MS' := reserve(MS, termToQid(T)) .
+    if MS' := declare(MS, T) .
 
     crl [asignation] :
-        < program : Program | input: ('__['_=_;['token[T], T2], T']), memory: MS , Ats > 
+        < program : Program | input: ('__['_=_;['token[T], T'], T'']), memory: MS , Ats > 
         =>
-        < program : Program | input: T', memory: MS' , Ats > 
-    if MS' := assign(MS, termToQid(T), T2) .
+        < program : Program | input: T'', memory: MS' , Ats > 
+    if MS' := assign(MS, T, T') .
+
+    crl [declareAndAssign] :
+        < program : Program | input: ('__['declare:_=_;['token[T],T'],T'']), memory: MS , Ats > 
+        =>
+        < program : Program | input: T'', memory: MS' , Ats > 
+    if MS' := declareAndAssign(MS, T, T') .
 endm

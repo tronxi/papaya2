@@ -19,6 +19,7 @@ fmod COMMAND-SIGN is
 
     op declare:_; : @Token@ -> @Command@ [ctor prec 40] .
     op _=_; : @Token@ @Type@ -> @Command@ [ctor prec 39] .
+    op declare:_=_; : @Token@ @Type@ -> @Command@ [ctor prec 39] .
 
     op empty : -> @Command@ [ctor] .
     op __ : @Program@ @Program@ -> @Program@ [ctor assoc id: empty] .

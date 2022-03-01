@@ -8,3 +8,5 @@ var2 = string(hola);
 var3 = float(3.14);
 var4 = var ;
 varList = list(string(a), string(b), var, list(var2)) ;
+
+declare: foo = list(var, var2) ;

@@ -32,6 +32,5 @@ fmod AUX-PARSER is
     eq termListToTypeList(MS, '_`,_[T, '_`,_[T',T'']]) = typeTokenToType(MS, T) / termListToTypeList(MS, T') / termListToTypeList(MS, T'') .
     eq termListToTypeList(MS, '_`,_[T,T']) = typeTokenToType(MS, T) / typeTokenToType(MS, T') .
     eq termListToTypeList(MS, T) = typeTokenToType(MS, T) [owise] .
-    --- eq termListToTypeList(MS, T) = int(10) / int(29) / int(15) .
 
 endfm

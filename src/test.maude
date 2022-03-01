@@ -18,7 +18,7 @@ mod TEST is
     eq stack = push(push(emptyStack, reserveInMemory(memA, 'var)), memB) .
 
     op initialProgram : -> Term .
-    eq initialProgram = generate("declare: var ;  var = list(float(10.83) , int(20), list(int(10), int(20), int(30)), int(30)) ; ") .
+    eq initialProgram = generate("declare: var = int(10) ;") .
 endm
 set print attribute on .
 --- red find(memA, 'e) .

@@ -5,9 +5,15 @@ fmod ASSIGNMENT is
 
     var MS : MemoryStack .
     var Q : Qid .
-    var T : Term .
+    var T T' : Term .
 
-    op assign : MemoryStack Qid Term -> MemoryStack .
-    eq assign(MS, Q, T) = save(MS, Q, typeTokenToType(MS, T)) .
+    op declare : MemoryStack Term -> MemoryStack .
+    eq declare(MS, T) = reserve(MS, termToQid(T)) .
+
+    op assign : MemoryStack Term Term -> MemoryStack .
+    eq assign(MS, T, T') = save(MS, termToQid(T), typeTokenToType(MS, T')) .
+
+    op declareAndAssign : MemoryStack Term Term -> MemoryStack .
+    eq declareAndAssign(MS, T, T') = assign(declare(MS, T), T, T') .
 
 endfm
