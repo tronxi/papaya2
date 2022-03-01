@@ -25,13 +25,13 @@ mod SEMANTICS is
     op generate : String -> Term .
     eq generate(S) = getTerm(metaParse(bubble, tokenize(S + " empty"), '@Program@)) .
 
-    crl [declaration] :
+    crl [declare] :
         < program : Program | input: ('__['declare:_;['token[T]], T']), memory: MS , Ats >
         =>
         < program : Program | input: T', memory: MS' , Ats > 
     if MS' := declare(MS, T) .
 
-    crl [asignation] :
+    crl [assign] :
         < program : Program | input: ('__['_=_;['token[T], T'], T'']), memory: MS , Ats > 
         =>
         < program : Program | input: T'', memory: MS' , Ats > 
