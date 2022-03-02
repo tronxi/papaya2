@@ -7,4 +7,6 @@ load memory-stack
 load aux-parser
 load assignment
 load file
+load grammar
+load process-module
 load semantics

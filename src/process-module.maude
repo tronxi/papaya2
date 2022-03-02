@@ -1,0 +1,38 @@
+fmod PROCESS-MODULE is
+    pr META-LEVEL .
+    pr LEXICAL .
+
+    var H : Header .
+    var IL : ImportList .
+    var SS : SortSet .
+    var SSDS : SubsortDeclSet .
+    var ODS : OpDeclSet .
+    var MAS : MembAxSet .
+    var EqS : EquationSet .
+    var Eq : Equation .
+    var OD : OpDecl .
+    vars T T' T'' : Term .
+    vars FM FM' : FModule .
+    var S : String .
+
+    op grammar : -> FModule .
+    eq grammar = upModule('GRAMMAR, false) .
+
+    op bubble : -> FModule .
+    eq bubble = upModule('BUBBLE, false) .
+
+    op generate : String -> Term .
+    eq generate(S) = getTerm(metaParse(bubble, tokenize(S + " emptyFunction"), '@FunctionList@)) .
+
+    op processModule : FModule Term -> FModule .
+    eq processModule(FM, T) = extractNames(FM, T) .
+
+    op extractNames : FModule Term ~> FModule .
+    eq extractNames(FM, '__[T,T']) = extractNames(extractNames(FM, T), T')  .
+    eq extractNames(FM, 'function__`{_`}['token[T],T',T'']) = addEquation(FM, eq 'fun['name:_argumentList:_[T,T']] = T'' [none] .)  .
+    eq extractNames(FM, T) = FM [owise] .
+
+    op addEquation : FModule Equation -> FModule .
+    eq addEquation(fmod H is IL sorts SS . SSDS ODS MAS EqS endfm, Eq)
+        = fmod H is IL sorts SS . SSDS ODS MAS (EqS Eq) endfm .
+endfm

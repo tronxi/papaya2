@@ -1,6 +1,7 @@
 load loads 
 mod TEST is
     pr SEMANTICS .
+    pr PROCESS-MODULE .
 
     op mem1 : -> Memory .
     eq mem1 = saveInMemory(none, 'a, int(1)) .
@@ -18,7 +19,7 @@ mod TEST is
     eq stack = push(push(emptyStack, reserveInMemory(memA, 'var)), memB) .
 
     op initialProgram : -> Term .
-    eq initialProgram = generate("declare: var = int(10) ;") .
+    eq initialProgram = generate("function main () { declare: var = int(10) ; } function foo (var, var2, var3) { declare: var2 ;  }") .
 endm
 set print attribute on .
 --- red find(memA, 'e) .
@@ -28,7 +29,8 @@ set print attribute on .
 --- red save(reserve(stack, 'vaar), 'var, int(23)) .
 --- red bubble .
 --- red save(stack, 'var, int(23)) .
-red initialProgram .
+red processModule(grammar, initialProgram) .
+--- red initialProgram .
 --- red termToQid(''a.Qid) .
-frew < program : Program | input:  initialProgram, memory: none > .
+--- frew < program : Program | input:  initialProgram, memory: none > .
 q

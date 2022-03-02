@@ -1,7 +1,8 @@
 fmod SIGN is
-    sorts @Token@ @Command@ @Program@ @Type@ .
+    sorts @Token@ @Command@ @Program@ @Type@ @Function@ @FunctionList@ @ArgumentList@ .
     subsort @Command@ < @Program@ .
     subsort @Token@ < @Type@ .
+    subsort @Function@ < @FunctionList@ .
 endfm
 
 view Token from TRIV to SIGN is
@@ -23,4 +24,11 @@ fmod COMMAND-SIGN is
 
     op empty : -> @Command@ [ctor] .
     op __ : @Program@ @Program@ -> @Program@ [ctor assoc id: empty] .
+
+    op () : -> @ArgumentList@ [ctor] .
+    op ((_)) : GenericList{Token} -> @ArgumentList@ [ctor] .
+
+    op emptyFunction : -> @Function@ [ctor] .
+    op function__{_} : @Token@ @ArgumentList@ @Program@ -> @Function@ [ctor] .
+    op __ : @FunctionList@ @FunctionList@ -> @FunctionList@ [ctor assoc id: emptyFunction] . 
 endfm

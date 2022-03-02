@@ -1,0 +1,11 @@
+fmod GRAMMAR is
+    pr COMMAND-SIGN .
+    pr META-LEVEL .
+
+    sort Function .
+
+    op name:_argumentList:_ : Qid @ArgumentList@ -> Function [ctor] .
+
+    op fun : Function -> Term .
+    eq fun(name: 'test argumentList: ()) = ''test.Qid .
+endfm

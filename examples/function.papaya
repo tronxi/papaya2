@@ -1,0 +1,7 @@
+function main() {
+    declare: var = int(10) ;
+}
+
+function foo(var1, var2, var3) {
+    declare: otra = string(holita) ;
+}
