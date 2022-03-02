@@ -6,35 +6,70 @@ mod SEMANTICS is
     pr PROCESS-MODULE .
     pr ASSIGNMENT .
 
+    sort State .
     subsort @Program@ < Attribute .
 
     op Program : -> Cid [ctor] .
     op program : -> Oid [ctor] .
-    
-    op input:_ : TermList -> Attribute [ctor format (n nt d)] .
-    op memory:_ : MemoryStack -> Attribute [ctor format (n nt d)] .
-    op module:_ : FModule -> Attribute [ctor format (n nt d)] .
 
-    vars T T' T'' : TermList .
+    ops initial executing : -> State [ctor] .
+    
+    op input:_ : TermList -> Attribute [ctor format (nn nt d)] .
+    op memory:_ : MemoryStack -> Attribute [ctor format (nn nt d)] .
+    op module:_ : FModule -> Attribute [ctor format (nn nt d)] .
+    op state:_ : State -> Attribute [ctor format (nn nt d)] .
+
+    vars T T' T'' Functions : TermList .
     vars MS MS' : MemoryStack .
     var Ats : AttributeSet .
     var FM : FModule .
 
+    rl  [inital] :
+        < program : Program | 
+        input: ('__['function__`{_`}['token[''main.Qid],'`(`).@ArgumentList@,
+        T
+        ], Functions]), memory: MS , module: FM , state: initial  Ats >
+    =>
+        < program : Program | 
+        input: ('__['function__`{_`}['token[''main.Qid],'`(`).@ArgumentList@,
+        T
+        ], Functions]), memory: MS , module: FM, state: executing, Ats > .
+
     crl [declare] :
-        < program : Program | input: ('__['declare:_;['token[T]], T']), memory: MS , module: FM ,  Ats >
-        =>
-        < program : Program | input: T', memory: MS' , module: FM, Ats > 
+        < program : Program | 
+        input: ('__['function__`{_`}['token[''main.Qid],'`(`).@ArgumentList@,
+        '__['declare:_;['token[T]], T']
+        ], Functions]), memory: MS , module: FM , state: executing, Ats >
+    =>
+        < program : Program | 
+        input: ('__['function__`{_`}['token[''main.Qid],'`(`).@ArgumentList@,
+        T'
+        ], Functions]), memory: MS' , module: FM, state: executing, Ats > 
     if MS' := declare(MS, T) .
 
+
     crl [assign] :
-        < program : Program | input: ('__['_=_;['token[T], T'], T'']), memory: MS , module: FM , Ats > 
-        =>
-        < program : Program | input: T'', memory: MS' , module: FM , Ats > 
+        < program : Program | 
+        input: ('__['function__`{_`}['token[''main.Qid],'`(`).@ArgumentList@,
+        '__['_=_;['token[T], T'], T'']
+        ], Functions]), memory: MS , module: FM , state: executing, Ats >
+    =>
+        < program : Program | 
+        input: ('__['function__`{_`}['token[''main.Qid],'`(`).@ArgumentList@,
+        T''
+        ], Functions]), memory: MS' , module: FM, state: executing, Ats > 
     if MS' := assign(MS, T, T') .
 
+
     crl [declareAndAssign] :
-        < program : Program | input: ('__['declare:_=_;['token[T],T'],T'']), memory: MS , module: FM , Ats > 
-        =>
-        < program : Program | input: T'', memory: MS', module: FM , Ats > 
-    if MS' := declareAndAssign(MS, T, T') .
+        < program : Program | 
+        input: ('__['function__`{_`}['token[''main.Qid],'`(`).@ArgumentList@,
+        '__['declare:_=_;['token[T],T'],T'']
+        ], Functions]), memory: MS , module: FM , state: executing, Ats >
+    =>
+        < program : Program |
+         input: ('__['function__`{_`}['token[''main.Qid],'`(`).@ArgumentList@,
+         T''
+         ], Functions]), memory: MS' , module: FM, state: executing, Ats > 
+    if MS' := declare(MS, T) .
 endm

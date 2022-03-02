@@ -30,5 +30,5 @@ fmod COMMAND-SIGN is
 
     op emptyFunction : -> @Function@ [ctor] .
     op function__{_} : @Token@ @ArgumentList@ @Program@ -> @Function@ [ctor] .
-    op __ : @FunctionList@ @FunctionList@ -> @FunctionList@ [ctor assoc id: emptyFunction] . 
+    op __ : @FunctionList@ @FunctionList@ -> @FunctionList@ [ctor assoc comm id: emptyFunction] . 
 endfm

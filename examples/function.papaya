@@ -1,5 +1,9 @@
 function main() {
-    declare: var = int(10) ;
+    declare: var2 ;
+    declare: VAR3 ; 
+    declare: var4 ;
+    declare: VAR5 ; 
+    empty
 }
 
 function foo(var1, var2, var3) {
