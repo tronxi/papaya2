@@ -10,6 +10,7 @@ fmod AUX-PARSER is
     var I : Int .
     var F : Float .
     var L : GenericList{LanguageType} .
+    var TL : TermList .
 
     op termToQid : Term -> Qid .
     eq termToQid(T) = downTerm(T, 'error) .
@@ -25,7 +26,7 @@ fmod AUX-PARSER is
 
     op typeTokenToType : MemoryStack Term -> LanguageType .
     eq typeTokenToType(MS, 'int`{_`}['token[T]]) = int(termToInt(T)) .
-    eq typeTokenToType(MS, 'string`{_`}['token[T]]) = string(termToString(T)) .
+    eq typeTokenToType(MS, 'string`{_`}['bubble[T]]) = string(parseBubble(T)) .
     eq typeTokenToType(MS, 'float`{_`}['token[T]]) = float(termToFloat(T)) .
     eq typeTokenToType(MS, 'list`{_`}[T]) = list(termListToTypeList(MS, T)) .
     eq typeTokenToType(MS, 'token[T]) = find(MS, termToQid(T)) [owise] .
@@ -44,9 +45,17 @@ fmod AUX-PARSER is
 
     op typeTokenToString : MemoryStack Term -> String .
     eq typeTokenToString(MS, 'int`{_`}['token[T]]) = string(termToQid(T)) .
-    eq typeTokenToString(MS, 'string`{_`}['token[T]]) = termToString(T) .
+    eq typeTokenToString(MS, 'string`{_`}['bubble[T]]) = parseBubble(T) .
     eq typeTokenToString(MS, 'float`{_`}['token[T]]) = string(termToQid(T)) .
     eq typeTokenToString(MS, 'list`{_`}[T]) = "list" .
     eq typeTokenToString(MS, 'token[T]) = typeToString(find(MS, termToQid(T))) [owise] .
 
+    op parseBubble : Term -> String .
+    eq parseBubble('__[TL]) = qidListToString(TL) .
+    eq parseBubble(T) = termToString(T) [owise] .
+
+    op qidListToString : TermList -> String .
+    eq qidListToString(empty) = "" .
+    eq qidListToString((T, TL)) = termToString(T) + " " + qidListToString(TL) .
+    eq qidListToString(T) = termToString(T) [owise] .
 endfm

@@ -1,0 +1,5 @@
+function main() {
+    declare: a = string{hola como estas} ;
+    println{a};
+    println{string{yo bien y tuu?}};
+}

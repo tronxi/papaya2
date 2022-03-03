@@ -6,4 +6,11 @@ fmod BUBBLE is
     [special (id-hook Bubble   (1 1)
            op-hook qidSymbol (<Qids> : ~> Qid))] .
 
+    op bubble : QidList -> @String@ 
+     [special 
+       (id-hook Bubble     (1 -1) 
+        op-hook qidListSymbol (__ : QidList QidList ~> QidList) 
+        op-hook qidSymbol  (<Qids> : ~> Qid) 
+        id-hook Exclude    (string{))] . 
+
 endfm

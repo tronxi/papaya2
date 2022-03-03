@@ -1,5 +1,5 @@
 fmod SIGN is
-    sorts @Token@ @Command@ @Program@ @Type@ @Function@ @FunctionList@ @ArgumentList@ .
+    sorts @Token@ @Command@ @Program@ @Type@ @Function@ @FunctionList@ @ArgumentList@ @String@ .
     subsort @Command@ < @Program@ .
     subsort @Token@ < @Type@ .
     subsort @Function@ < @FunctionList@ .
@@ -13,10 +13,10 @@ fmod COMMAND-SIGN is
     pr SIGN .
     pr GENERIC-LIST{Token} .
 
-    op string{_} : @Token@ -> @Type@ .
-    op int{_} : @Token@ -> @Type@ .
-    op float{_} : @Token@ -> @Type@ .
-    op list{_} : GenericList{Token} -> @Token@ .
+    op string{_} : @String@ -> @Type@ [ctor] .
+    op int{_} : @Token@ -> @Type@ [ctor] .
+    op float{_} : @Token@ -> @Type@ [ctor] .
+    op list{_} : GenericList{Token} -> @Token@ [ctor] .
 
     op declare:_; : @Token@ -> @Command@ [ctor prec 40] .
     op _=_; : @Token@ @Type@ -> @Command@ [ctor prec 39] .
