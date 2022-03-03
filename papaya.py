@@ -13,13 +13,13 @@ def main(filename, debug=False):
     moduleGrammar = semantics.parseTerm("processModule(grammar, " + str(metaProgram) + ")")
     moduleGrammar.reduce()
 
-    system = " < program : Program | memory: none , state: initial , input: (${program}) , module: (${module})  > "
+    system = "<> < program : Program | memory: none , state: initial , input: (${program}) , module: (${module})  > "
     generatedProgram = system.replace("${program}", str(metaProgram))
     generatedProgram = generatedProgram.replace("${module}", str(moduleGrammar))
     result,rewrites = semantics.parseTerm(generatedProgram).erewrite()
     if debug:
-        print("\nProgram:")
-        print(metaProgram)
+        # print("\nProgram:")
+        # print(metaProgram)
         # print("\nGrammar:")
         # print(moduleGrammar)
         print("\nResult:")

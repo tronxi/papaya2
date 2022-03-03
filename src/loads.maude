@@ -9,4 +9,5 @@ load assignment
 load file
 load grammar
 load process-module
+load io
 load semantics

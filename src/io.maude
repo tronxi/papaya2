@@ -1,0 +1,17 @@
+mod IO is
+    pr CONVERSION .
+    inc STD-STREAM . 
+    pr MEMORY-STACK .
+    pr META-LEVEL .
+    pr AUX-PARSER .
+
+    var MS : MemoryStack .
+    var T : Term .
+    var O : Oid .
+
+    op print : MemoryStack Term Oid -> Msg .
+    eq print(MS, T, O) = write(stdout, O, typeTokenToString(MS, T)) .
+
+    op println : MemoryStack Term Oid -> Msg .
+    eq println(MS, T, O) = write(stdout, O, typeTokenToString(MS, T) + "\n") .
+endm

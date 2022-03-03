@@ -6,6 +6,8 @@ fmod GRAMMAR is
 
     op name:_argumentList:_ : Qid @ArgumentList@ -> Function [ctor] .
 
+    var F : Function .
+
     op fun : Function -> Term .
-    eq fun(name: 'test argumentList: ()) = ''test.Qid .
+    eq fun(name: 'test argumentList: ()) = '__['declare:_;['token[''otra.Qid]],'declare:_;['token[''ey.Qid]]] .
 endfm

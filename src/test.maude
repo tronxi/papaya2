@@ -19,7 +19,7 @@ mod TEST is
     eq stack = push(push(emptyStack, reserveInMemory(memA, 'var)), memB) .
 
     op initialProgram : -> Term .
-    eq initialProgram = generate("function main () { declare: var = int(10) ; } function foo (var, var2, var3) { declare: var2 ;  }") .
+    eq initialProgram = generate("function main () { declare: var = int{10} ; foo();} function foo () { declare: var2 ;  }") .
 endm
 set print attribute on .
 --- red find(memA, 'e) .
@@ -29,8 +29,9 @@ set print attribute on .
 --- red save(reserve(stack, 'vaar), 'var, int(23)) .
 --- red bubble .
 --- red save(stack, 'var, int(23)) .
-red processModule(grammar, initialProgram) .
+--- red processModule(grammar, initialProgram) .
+red getFunctionBody(grammar, ''test.Qid, '`(`).@ArgumentList@) .
 --- red initialProgram .
 --- red termToQid(''a.Qid) .
---- frew < program : Program | input:  initialProgram, memory: none > .
+--- erew <> < program : Program | input:  initialProgram, memory: none > .
 q

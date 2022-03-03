@@ -13,17 +13,21 @@ fmod COMMAND-SIGN is
     pr SIGN .
     pr GENERIC-LIST{Token} .
 
-    op string(_) : @Token@ -> @Type@ .
-    op int(_) : @Token@ -> @Type@ .
-    op float(_) : @Token@ -> @Type@ .
-    op list(_) : GenericList{Token} -> @Token@ .
+    op string{_} : @Token@ -> @Type@ .
+    op int{_} : @Token@ -> @Type@ .
+    op float{_} : @Token@ -> @Type@ .
+    op list{_} : GenericList{Token} -> @Token@ .
 
     op declare:_; : @Token@ -> @Command@ [ctor prec 40] .
     op _=_; : @Token@ @Type@ -> @Command@ [ctor prec 39] .
     op declare:_=_; : @Token@ @Type@ -> @Command@ [ctor prec 39] .
+    op _=__; : @Token@ @Token@ @ArgumentList@ -> @Command@ [ctor prec 39] .
+    op __; : @Token@ @ArgumentList@ -> @Command@ [ctor prec 39] . 
+    op print{_}; : @Type@ -> @Command@ [ctor prec 39] .
+    op println{_}; : @Type@ -> @Command@ [ctor prec 39] .
 
-    op empty : -> @Command@ [ctor] .
-    op __ : @Program@ @Program@ -> @Program@ [ctor assoc id: empty] .
+    op end : -> @Command@ [ctor] .
+    op __ : @Program@ @Program@ -> @Program@ [ctor assoc id: end] .
 
     op () : -> @ArgumentList@ [ctor] .
     op ((_)) : GenericList{Token} -> @ArgumentList@ [ctor] .

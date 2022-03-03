@@ -11,7 +11,7 @@ fmod PROCESS-MODULE is
     var EqS : EquationSet .
     var Eq : Equation .
     var OD : OpDecl .
-    vars T T' T'' : Term .
+    vars T T' T'' T''' T'''' : Term .
     vars FM FM' : FModule .
     var S : String .
 
@@ -29,10 +29,17 @@ fmod PROCESS-MODULE is
 
     op extractNames : FModule Term ~> FModule .
     eq extractNames(FM, '__[T,T']) = extractNames(extractNames(FM, T), T')  .
-    eq extractNames(FM, 'function__`{_`}['token[T],T',T'']) = addEquation(FM, eq 'fun['name:_argumentList:_[T,T']] = T'' [none] .)  .
+    eq extractNames(FM, 'function__`{_`}['token[T],T',T'']) = addEquation(FM, eq 'fun['name:_argumentList:_[T,T']] = upTerm(T'') [none] .)  .
     eq extractNames(FM, T) = FM [owise] .
 
     op addEquation : FModule Equation -> FModule .
     eq addEquation(fmod H is IL sorts SS . SSDS ODS MAS EqS endfm, Eq)
         = fmod H is IL sorts SS . SSDS ODS MAS (EqS Eq) endfm .
+
+    op processTerm : FModule Term -> Term .
+    eq processTerm(FM, T) = getTerm(metaParse(FM, downTerm(T, 'error), anyType)) .
+
+    op getFunctionBody : FModule Term Term -> Term .
+    eq getFunctionBody(FM, T, T') = downTerm(getTerm(metaReduce(FM, 'fun['name:_argumentList:_[T,T']])), 'error) .
+
 endfm

@@ -1,11 +1,19 @@
 function main() {
-    declare: var2 ;
-    declare: VAR3 ; 
-    declare: var4 ;
-    declare: VAR5 ; 
-    empty
+    declare: var = int{1} ;
+    foo();
+    print{string{fuera:}};
+    println{var};
 }
 
-function foo(var1, var2, var3) {
-    declare: otra = string(holita) ;
+function foo() {
+    declare: var = int{2} ;
+    var();
+    print{string{dentro:}};
+    println{var};
+}
+
+function var() {
+    declare: var = int{3} ;
+    print{string{masdentro:}};
+    println{var};
 }

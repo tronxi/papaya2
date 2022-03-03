@@ -5,14 +5,19 @@ mod SEMANTICS is
     pr MEMORY-STACK .
     pr PROCESS-MODULE .
     pr ASSIGNMENT .
+    pr IO .
 
-    sort State .
+    sorts State ListOfTerm .
     subsort @Program@ < Attribute .
+    subsort Term < ListOfTerm .
 
     op Program : -> Cid [ctor] .
     op program : -> Oid [ctor] .
 
     ops initial executing : -> State [ctor] .
+
+    op emptyListOfTerm : -> ListOfTerm [ctor] .
+    op _-_ : ListOfTerm ListOfTerm -> ListOfTerm [ctor assoc id: emptyListOfTerm] .
     
     op input:_ : TermList -> Attribute [ctor format (nn nt d)] .
     op memory:_ : MemoryStack -> Attribute [ctor format (nn nt d)] .
@@ -23,6 +28,11 @@ mod SEMANTICS is
     vars MS MS' : MemoryStack .
     var Ats : AttributeSet .
     var FM : FModule .
+    vars LOT LOT' : ListOfTerm .
+
+    op termToList : Term -> ListOfTerm .
+    eq termToList('__[T, T']) = T - termToList(T') .
+    eq termToList(T) = T [owise] .
 
     rl  [inital] :
         < program : Program | 
@@ -32,18 +42,18 @@ mod SEMANTICS is
     =>
         < program : Program | 
         input: ('__['function__`{_`}['token[''main.Qid],'`(`).@ArgumentList@,
-        T
+        termToList(T)
         ], Functions]), memory: MS , module: FM, state: executing, Ats > .
 
     crl [declare] :
         < program : Program | 
         input: ('__['function__`{_`}['token[''main.Qid],'`(`).@ArgumentList@,
-        '__['declare:_;['token[T]], T']
+        ('declare:_;['token[T]]) - LOT
         ], Functions]), memory: MS , module: FM , state: executing, Ats >
     =>
         < program : Program | 
         input: ('__['function__`{_`}['token[''main.Qid],'`(`).@ArgumentList@,
-        T'
+        LOT
         ], Functions]), memory: MS' , module: FM, state: executing, Ats > 
     if MS' := declare(MS, T) .
 
@@ -51,12 +61,12 @@ mod SEMANTICS is
     crl [assign] :
         < program : Program | 
         input: ('__['function__`{_`}['token[''main.Qid],'`(`).@ArgumentList@,
-        '__['_=_;['token[T], T'], T'']
+        ('_=_;['token[T], T']) - LOT
         ], Functions]), memory: MS , module: FM , state: executing, Ats >
     =>
         < program : Program | 
         input: ('__['function__`{_`}['token[''main.Qid],'`(`).@ArgumentList@,
-        T''
+        LOT
         ], Functions]), memory: MS' , module: FM, state: executing, Ats > 
     if MS' := assign(MS, T, T') .
 
@@ -64,12 +74,72 @@ mod SEMANTICS is
     crl [declareAndAssign] :
         < program : Program | 
         input: ('__['function__`{_`}['token[''main.Qid],'`(`).@ArgumentList@,
-        '__['declare:_=_;['token[T],T'],T'']
+        ('declare:_=_;['token[T],T']) - LOT
         ], Functions]), memory: MS , module: FM , state: executing, Ats >
     =>
         < program : Program |
          input: ('__['function__`{_`}['token[''main.Qid],'`(`).@ArgumentList@,
-         T''
+         LOT
          ], Functions]), memory: MS' , module: FM, state: executing, Ats > 
-    if MS' := declare(MS, T) .
+    if MS' := declareAndAssign(MS, T, T') .
+
+    crl  [callFunction] :
+        < program : Program | 
+        input: ('__['function__`{_`}['token[''main.Qid],'`(`).@ArgumentList@,
+        ('__;['token[T], T']) - LOT
+        ], Functions]), memory: MS , module: FM , state: executing,  Ats >
+    =>
+        < program : Program | 
+        input: ('__['function__`{_`}['token[''main.Qid],'`(`).@ArgumentList@,
+        ''apile.Qid - LOT' - ''desapile.Qid -  LOT
+        --- LOT' -  LOT
+        ], Functions]), memory: MS , module: FM, state: executing, Ats >
+    if LOT' := termToList(getFunctionBody(FM, T, T')) .
+
+    crl  [apile] :
+        < program : Program | 
+        input: ('__['function__`{_`}['token[''main.Qid],'`(`).@ArgumentList@,
+        (''apile.Qid) - LOT
+        ], Functions]), memory: MS , module: FM , state: executing,  Ats >
+    =>
+        < program : Program | 
+        input: ('__['function__`{_`}['token[''main.Qid],'`(`).@ArgumentList@,
+        LOT
+        ], Functions]), memory: MS' , module: FM, state: executing, Ats >
+    if MS' := push(MS, none) .
+
+    crl  [desapile] :
+        < program : Program | 
+        input: ('__['function__`{_`}['token[''main.Qid],'`(`).@ArgumentList@,
+        (''desapile.Qid) - LOT
+        ], Functions]), memory: MS , module: FM , state: executing,  Ats >
+    =>
+        < program : Program | 
+        input: ('__['function__`{_`}['token[''main.Qid],'`(`).@ArgumentList@,
+        LOT
+        ], Functions]), memory: MS' , module: FM, state: executing, Ats >
+    if MS' := pop(MS) .
+
+    rl  [print] :
+        < program : Program | 
+        input: ('__['function__`{_`}['token[''main.Qid],'`(`).@ArgumentList@,
+        ('print`{_`};[T]) - LOT
+        ], Functions]), memory: MS , module: FM , state: executing,  Ats >
+    =>
+        < program : Program | 
+        input: ('__['function__`{_`}['token[''main.Qid],'`(`).@ArgumentList@,
+        LOT
+        ], Functions]), memory: MS , module: FM, state: executing, Ats > print(MS, T, program) .
+
+    rl  [println] :
+        < program : Program | 
+        input: ('__['function__`{_`}['token[''main.Qid],'`(`).@ArgumentList@,
+        ('println`{_`};[T]) - LOT
+        ], Functions]), memory: MS , module: FM , state: executing,  Ats >
+    =>
+        < program : Program | 
+        input: ('__['function__`{_`}['token[''main.Qid],'`(`).@ArgumentList@,
+        LOT
+        ], Functions]), memory: MS , module: FM, state: executing, Ats > println(MS, T, program) .
+
 endm
