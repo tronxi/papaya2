@@ -8,6 +8,8 @@ fmod AUX-PARSER is
     var S : String .
     var MS : MemoryStack .
     var I : Int .
+    var F : Float .
+    var L : GenericList{LanguageType} .
 
     op termToQid : Term -> Qid .
     eq termToQid(T) = downTerm(T, 'error) .
@@ -36,6 +38,9 @@ fmod AUX-PARSER is
 
     op typeToString : Type -> String .
     eq typeToString((intType I)) = string(I, 10) .
+    eq typeToString((stringType S)) = S .
+    eq typeToString((floatType F)) = string(F) .
+    eq typeToString((listType L)) = "list" .
 
     op typeTokenToString : MemoryStack Term -> String .
     eq typeTokenToString(MS, 'int`{_`}['token[T]]) = string(termToQid(T)) .
