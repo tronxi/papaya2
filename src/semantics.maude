@@ -92,7 +92,6 @@ mod SEMANTICS is
         < program : Program | 
         input: ('__['function__`{_`}['token[''main.Qid],'`(`).@ArgumentList@,
         ''apile.Qid - LOT' - ''desapile.Qid -  LOT
-        --- LOT' -  LOT
         ], Functions]), memory: MS , module: FM, state: executing, Ats >
     if LOT' := termToList(getFunctionBody(FM, T, T')) .
 
